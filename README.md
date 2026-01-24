@@ -1,23 +1,23 @@
 # Multimon-Android
 
-A Flutter Android application that integrates RTL-SDR hardware support with multimon-ng for decoding various digital radio protocols directly on Android devices, without requiring external driver apps.
+A Flutter Android application that integrates multimon-ng for decoding various digital radio protocols from audio input on Android devices.
 
 ## Overview
 
 This project combines:
 - **Flutter** - Cross-platform UI framework
-- **RTL-SDR** - Native USB support for RTL2832U-based SDR dongles
 - **Multimon-ng** - Multi-protocol digital signal decoder
+- **TCP Audio Input** - Receives audio data via TCP from SDR++ or similar applications
 
-The application provides native RTL-SDR support on Android through JNI bindings, allowing direct USB access to SDR hardware without requiring the rtl_tcp_andro driver app.
+**Note:** This is primarily an audio decoding tool. It accepts TCP audio input from SDR++ and does NOT include integrated RTL-SDR support. Use SDR++ or another SDR application to handle radio tuning and demodulation, then stream the audio to this app via TCP.
 
 ## Features
 
-- Native RTL-SDR device access via USB
-- Real-time signal demodulation and decoding
+- TCP audio input from SDR++ or compatible applications
+- Real-time signal decoding
 - Support for multiple protocols (POCSAG, FLEX, DTMF, ZVEI, EAS, etc.)
-- Simple UI for device control and message display
-- No external driver apps required
+- Simple UI for message display
+- Audio processing via multimon-ng
 
 ## Building
 
@@ -29,10 +29,8 @@ flutter build apk
 
 ## Usage
 
-1. Connect RTL-SDR device via USB OTG
-2. Grant USB permissions when prompted
-3. Tap "Connect" to open the device
-4. Tap "Start" to begin receiving and decoding
-5. View decoded messages in the list
+1. Configure SDR++ to output audio via TCP
+2. Launch the app and connect to the TCP audio stream
+3. View decoded messages in the list
 
 See full documentation in the project for more details.
