@@ -1,0 +1,49 @@
+cmake_minimum_required(VERSION 3.10.2)
+
+project(tcp_multimon)
+
+# Compiler flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -DMAX_VERBOSE_LEVEL=3 -DNO_X11")
+set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG")
+set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG")
+
+# Multimon-ng sources (decoders only, no input/output/main)
+file(GLOB MULTIMON_SOURCES 
+    "multimon/*.c"
+)
+
+# Exclude files we don't need
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*main\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*unixinput\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*gen\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*gen_.*\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*win32_.*\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*xdisplay\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*mkcostab\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*BCHCode_stub\\.c$")
+list(FILTER MULTIMON_SOURCES EXCLUDE REGEX ".*bch_stub\\.c$")
+
+# TCP bridge source
+set(TCP_BRIDGE_SOURCES
+    "tcp_multimon_bridge.c"
+)
+
+find_library(LOG_LIB log)
+find_library(ANDROID_LIB android)
+
+# TCP Multimon library (no RTL-SDR, no FM demod needed)
+add_library(tcp_multimon SHARED
+    ${MULTIMON_SOURCES}
+    ${TCP_BRIDGE_SOURCES}
+)
+
+target_include_directories(tcp_multimon PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/multimon
+)
+
+target_link_libraries(tcp_multimon
+    ${LOG_LIB}
+    ${ANDROID_LIB}
+    m
+)
