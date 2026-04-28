@@ -5,16 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: set up JDK 11
-      uses: actions/setup-java@v4
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
       with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
-        working-directory: ./android
-    - name: chmod
-      run: chmod +x gradle
-      working-directory: ./android
-    - name: Build with Gradle
-      run: ./gradle build
-      working-directory: ./android
+        channel: stable
+        flutter-version-file: pubspec.yaml # path to pubspec.yaml or .fvmrc or .fvm/fvm_config.json
+    - run: flutter pub get
+    - run: flutter build apk
