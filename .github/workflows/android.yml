@@ -11,7 +11,10 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
+        working-directory: ./android
     - name: chmod
       run: chmod +x gradle
+      working-directory: ./android
     - name: Build with Gradle
       run: ./gradle build
+      working-directory: ./android
